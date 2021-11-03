@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 
 import React, { useState } from 'react'
 
-import Image from 'next/Image'
+import Image from 'next/image'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
