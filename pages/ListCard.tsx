@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 
 const ListCard = ({ player }: any) => {
+  if (!player) return null;
+
   return (
     <Paper
       key={player.summonerId}

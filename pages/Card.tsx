@@ -5,11 +5,13 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 
 const Card = ({ player }: any) => {
+  if (!player) return null;
+
   const gold = "#FFD700";
   const silver = "#C0C0C0";
   const bronze = "#cd7f32";
-  let crown = "/gold-crown.svg";
 
+  let crown = "/gold-crown.svg";
   let color = gold;
 
   if (player.place === 2) {
