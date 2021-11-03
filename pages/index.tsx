@@ -26,7 +26,7 @@ export async function getStaticProps() {
   const summoners = await Promise.all(p1);
 
   const p2 = summoners.map((summoner) => {
-    return getSummonerLeagueEntryBySummonerId(summoner.id);
+    return getSummonerLeagueEntryBySummonerId(summoner.id, summoner.name);
   });
 
   let leagueEntries = await Promise.all(p2);
@@ -94,7 +94,9 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
 
         <div style={{ overflow: "auto", padding: 10 }}>
           {players.map((player) =>
-            player.place <= 3 ? null : <ListCard player={player} />
+            player.place <= 3 ? null : (
+              <ListCard player={player} key={player.place} />
+            )
           )}
         </div>
       </header>

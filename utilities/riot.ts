@@ -49,7 +49,8 @@ export const getSummonerByName = async (name: string): Promise<Summoner> => {
 };
 
 export const getSummonerLeagueEntryBySummonerId = async (
-  summonerId: string
+  summonerId: string,
+  summonerName: string
 ): Promise<LeagueEntry> => {
   console.log(`Attempting to fetch league entry for summoner ${summonerId}.`);
   const response = await fetch(
@@ -61,7 +62,7 @@ export const getSummonerLeagueEntryBySummonerId = async (
 
   if (response.status === 200) {
     const entries = ((await response.json()) as unknown) as LeagueEntry[];
-    return entries[0];
+    return { ...entries[0], summonerName };
   }
 
   throw new Error(
