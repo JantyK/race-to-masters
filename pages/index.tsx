@@ -99,8 +99,8 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
         >
           {players.map((player) =>
             player.place <= 3 ? null : (
-              <Grid item xs={3}>
-                <ListCard player={player} key={player.place} />
+              <Grid item xs={3} key={player.place}>
+                <ListCard player={player} />
               </Grid>
             )
           )}
@@ -129,8 +129,8 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
           <Image src={"/poggers.png"} alt="Poggers" width={40} height={40} />
         </Grid>
         {players.map((player) => (
-          <Grid container style={{ padding: 10 }}>
-            <ListCardMobile player={player} key={player.place} />
+          <Grid container style={{ padding: 10 }} key={player.place}>
+            <ListCardMobile player={player} />
           </Grid>
         ))}
       </header>
