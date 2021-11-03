@@ -35,7 +35,7 @@ const ListCardMobile = ({ player }: any) => {
       style={{
         padding: 10,
         width: "100%",
-        border: `5px solid ${color}`,
+        border: color ? `5px solid ${color}` : "none",
       }}
     >
       <Grid container>
@@ -44,7 +44,7 @@ const ListCardMobile = ({ player }: any) => {
             variant="h6"
             style={{ fontWeight: "bold", opacity: 0.75, marginRight: 10 }}
           >
-            {player.place <= 3 ? (
+            {crown ? (
               <Image src={crown} alt="Crown" width={20} height={20} />
             ) : (
               `${player.place}.`
