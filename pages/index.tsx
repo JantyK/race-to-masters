@@ -1,29 +1,36 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import Image from 'next/image'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import Image from "next/image";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 
-import environment from '../utilities/environment'
-import { getSummonerByName, getSummonerLeagueEntryBySummonerId, LeagueEntry, sortLeagueEntriesByRank } from '../utilities/riot'
-
+import environment from "../utilities/environment";
+import {
+  getSummonerByName,
+  getSummonerLeagueEntryBySummonerId,
+  LeagueEntry,
+  sortLeagueEntriesByRank,
+} from "../utilities/riot";
+import Card from "./Card";
+import ListCard from "./ListCard";
 
 export async function getStaticProps() {
   const p1 = environment.leaderboardEntries.map((entry) => {
-    return getSummonerByName(entry.summonerName)
-  })
+    return getSummonerByName(entry.summonerName);
+  });
 
-  const summoners = await Promise.all(p1)
-  
+  const summoners = await Promise.all(p1);
+
   const p2 = summoners.map((summoner) => {
-    return getSummonerLeagueEntryBySummonerId(summoner.id)
-  })
+    return getSummonerLeagueEntryBySummonerId(summoner.id);
+  });
 
-  let leagueEntries = await Promise.all(p2)
-  leagueEntries = sortLeagueEntriesByRank(leagueEntries)
+  let leagueEntries = await Promise.all(p2);
+  leagueEntries = sortLeagueEntriesByRank(leagueEntries);
 
   // TODO: Add twitch usernames to response.
   return {
@@ -32,82 +39,67 @@ export async function getStaticProps() {
         return {
           ...entry,
           place: i + 1,
-        }
+          ...environment.leaderboardEntries.find(
+            (e) => e?.summonerName === entry?.summonerName
+          ),
+        };
       }),
     },
     revalidate: 60,
-  }
+  };
 }
 
 interface Props {
-  leagueEntries: (LeagueEntry & { place: number })[]
+  leagueEntries: (LeagueEntry & {
+    place: number;
+    profilePic?: string;
+    channelName: string;
+  })[];
 }
 
 const Home: NextPage<Props> = ({ leagueEntries }) => {
-  const [players] = useState(leagueEntries);
-
-  const getTrophy = (place: number) => {
-    if(place === 1) {
-      return '/gold-trophy.svg'
-    }
-
-    if(place === 2) {
-      return '/silver-trophy.svg'
-    }
-    
-    if(place === 3) {
-      return '/bronze-trophy.svg'
-    }
-
-    return '/sadge.png'
-  }
+  const [players] = useState(leagueEntries || []);
 
   return (
     <div className="App">
       <header className="App-header">
         <Grid container justifyContent="center" alignItems="center">
-          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} />
-          <Typography variant="h4" style={{ marginBottom: 20, fontWeight: "bold" }}>
+          <Image
+            src={"/poggers.png"}
+            alt="Poggers"
+            width={40}
+            height={40}
+            className="poggers-left"
+          />
+          <Typography
+            variant="h4"
+            style={{ fontWeight: "bold", margin: "10px 10px 0px 10px" }}
+          >
             RACE TO MASTERS
           </Typography>
-          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} />
+          <Image src={"/poggers.png"} alt="Poggers" width={40} height={40} />
         </Grid>
-
         {players && (
-          players.map(player => (
-            <Paper key={player.summonerId} style={{ padding: 10, marginBottom: 20 }}>
-              <Grid container style={{ width: 600 }} alignItems="center">
-                {player.place < 4 && <Image src={getTrophy(player.place)} alt="Trophy Icon" height={40} width={40} /> }
-                {player.place >= 4 && <Image src={getTrophy(player.place)} alt="Trophy Icon" height={35} width={35} /> }
-                <Grid container item xs style={{ marginLeft: 10 }} alignItems="center" justifyContent="space-between">
-                  <Grid item xs style={{ textAlign: "left" }}>
-                    <Typography variant="h6" style={{ fontWeight: "bold" }}>
-                      {player.summonerName}
-                    </Typography>
-                  </Grid>
-                    <Grid item xs>
-                    <Typography style={{ fontWeight: "bold" }}>
-                    {`${player.tier} ${player.rank}`}
-                  </Typography> 
-                    </Grid>
-                    <Grid item xs>
-                      <Typography style={{ fontWeight: "bold" }}>
-                        {player.leaguePoints} LP
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography style={{ fontWeight: "bold" }}>
-                        {player.wins} Wins
-                      </Typography>
-                    </Grid>
-                </Grid>
-              </Grid>
-            </Paper>
-          ))
+          <Grid
+            container
+            justifyContent="center"
+            spacing={2}
+            style={{ marginBottom: 20, marginTop: 10 }}
+          >
+            <Card player={players[1]} />
+            <Card player={players[0]} />
+            <Card player={players[2]} />
+          </Grid>
         )}
+
+        <div style={{ overflow: "auto", padding: 10 }}>
+          {players.map((player) =>
+            player.place <= 3 ? null : <ListCard player={player} />
+          )}
+        </div>
       </header>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;
