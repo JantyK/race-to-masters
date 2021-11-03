@@ -3,10 +3,8 @@ import type { NextPage } from "next";
 import React, { useState } from "react";
 
 import Image from "next/image";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
 
 import environment from "../utilities/environment";
 import {
@@ -17,6 +15,7 @@ import {
 } from "../utilities/riot";
 import Card from "./Card";
 import ListCard from "./ListCard";
+import ListCardMobile from "./ListCardMobile";
 
 export async function getStaticProps() {
   const p1 = environment.leaderboardEntries.map((entry) => {
@@ -62,7 +61,7 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header-desktop">
         <Grid container justifyContent="center" alignItems="center">
           <Image
             src={"/poggers.png"}
@@ -92,13 +91,48 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
           </Grid>
         )}
 
-        <div style={{ overflow: "auto", padding: 10 }}>
+        <Grid
+          container
+          style={{ overflow: "auto", padding: 10 }}
+          direction="column"
+          alignItems="center"
+        >
           {players.map((player) =>
             player.place <= 3 ? null : (
-              <ListCard player={player} key={player.place} />
+              <Grid item xs={3}>
+                <ListCard player={player} key={player.place} />
+              </Grid>
             )
           )}
-        </div>
+        </Grid>
+      </header>
+      <header className="App-header-mobile">
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          style={{ marginBottom: 10 }}
+        >
+          <Image
+            src={"/poggers.png"}
+            alt="Poggers"
+            width={40}
+            height={40}
+            className="poggers-left"
+          />
+          <Typography
+            variant="h6"
+            style={{ fontWeight: "bold", margin: "10px 10px 0px 10px" }}
+          >
+            RACE TO MASTERS
+          </Typography>
+          <Image src={"/poggers.png"} alt="Poggers" width={40} height={40} />
+        </Grid>
+        {players.map((player) => (
+          <Grid container style={{ padding: 10 }}>
+            <ListCardMobile player={player} key={player.place} />
+          </Grid>
+        ))}
       </header>
     </div>
   );

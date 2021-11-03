@@ -13,10 +13,16 @@ const ListCard = ({ player }: any) => {
       style={{
         padding: 10,
         marginBottom: 20,
-        width: 700,
+        width: 600,
       }}
     >
-      <Grid container alignContent="center">
+      <Grid container alignItems="center">
+        <Typography
+          variant="h6"
+          style={{ marginRight: 10, fontWeight: "bold", opacity: 0.75 }}
+        >
+          {player.place}.
+        </Typography>
         {player.profilePic && (
           <Tooltip title={`Go to https://twitch.tv/${player.channelName}`}>
             <Grid style={{ padding: 0, margin: 0, maxHeight: 40 }}>
@@ -45,7 +51,7 @@ const ListCard = ({ player }: any) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Grid item xs style={{ textAlign: "left" }}>
+          <Grid item xs={4} style={{ textAlign: "left" }}>
             <Typography variant="h6" className="text">
               {player.summonerName || "N/A"}
             </Typography>

@@ -74,10 +74,19 @@ export const sortLeagueEntriesByRank = (
   entries: LeagueEntry[]
 ): LeagueEntry[] => {
   return entries.sort((e1, e2) => {
-    return (
-      convertTierAndRankToNumber(e2.tier, e2.rank, e2.leaguePoints) -
-      convertTierAndRankToNumber(e1.tier, e1.rank, e1.leaguePoints)
-    );
+    const a = convertTierAndRankToNumber(e1.tier, e1.rank, e1.leaguePoints);
+    const b = convertTierAndRankToNumber(e2.tier, e2.rank, e2.leaguePoints);
+    if (isNaN(a)) {
+      return 1;
+    }
+    if (isNaN(b)) {
+      return -1;
+    }
+
+    if (isNaN(a) && isNaN(b)) {
+      return 0;
+    }
+    return b - a;
   });
 };
 

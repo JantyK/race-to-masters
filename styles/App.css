@@ -16,7 +16,7 @@ body {
   pointer-events: none;
 }
 
-.App-header {
+.App-header-desktop {
   padding: 30px;
   background-color: #282c34;
   min-height: calc(100vh - 60px);
@@ -44,4 +44,31 @@ body {
 .text {
   font-weight: bold;
   opacity: 0.75;
+}
+
+.App-header-mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .App-header-desktop {
+    display: none;
+  }
+
+  .App-header-mobile {
+    padding: 10px;
+    background-color: #282c34;
+    min-height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+
+  .profile-pic {
+    border-radius: 50%;
+    border: 1px solid lightgray !important;
+    cursor: pointer;
+  }
 }

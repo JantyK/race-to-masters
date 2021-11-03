@@ -26,7 +26,7 @@ const Card = ({ player }: any) => {
 
   return (
     <Grid item style={{ marginTop: player.place > 1 ? 20 : 0 }}>
-      <Image src={crown} alt="Poggers" width={60} height={60} />
+      <Image src={crown} alt="Crown" width={60} height={60} />
       <Paper
         style={{
           width: 200,
@@ -73,16 +73,21 @@ const Card = ({ player }: any) => {
           >
             <Typography className="text">Rank:</Typography>
             <Typography className="text">
-              {`${player.tier} ${player.rank}`}
+              {player.tier ? `${player.tier} ${player.rank}` : "N/A"}
             </Typography>
           </Grid>
           <Grid container justifyContent="space-between">
             <Typography className="text">LP:</Typography>
-            <Typography className="text">{player.leaguePoints} LP</Typography>
+
+            <Typography className="text">
+              {player.leaguePoints ? `${player.leaguePoints} LP` : "N/A"}
+            </Typography>
           </Grid>
           <Grid container justifyContent="space-between">
             <Typography className="text">Wins:</Typography>
-            <Typography className="text">{player.wins}</Typography>
+            <Typography className="text">
+              {player.wins ? `${player.wins} Wins` : "N/A"}
+            </Typography>
           </Grid>
         </Grid>
       </Paper>
