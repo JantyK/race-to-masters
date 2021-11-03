@@ -32,7 +32,7 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
     <div>
       {
         leagueEntries.map((entry: LeagueEntry) => (
-            <p key={entry.summonerId}>{entry.summonerName}</p>
+          <p key={entry.summonerId}>{entry.summonerId} - {entry.summonerName}</p>
           )
         )
       }
