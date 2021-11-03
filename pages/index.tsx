@@ -65,11 +65,11 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
     <div className="App">
       <header className="App-header">
         <Grid container justifyContent="center" alignItems="center">
-          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} style={{ marginBottom: 30, transform: "scaleX(-1)", marginRight: 10 }} />
+          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} />
           <Typography variant="h4" style={{ marginBottom: 20, fontWeight: "bold" }}>
             RACE TO MASTERS
           </Typography>
-          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} style={{ marginBottom: 30, marginLeft: 10 }} />
+          <Image src={'/poggers.png'} alt="Poggers" width={40} height={40} />
         </Grid>
 
         {players && (
@@ -77,7 +77,7 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
             <Paper key={player.summonerId} style={{ padding: 10, marginBottom: 20 }}>
               <Grid container style={{ width: 600 }} alignItems="center">
                 {player.place < 4 && <Image src={getTrophy(player.place)} alt="Trophy Icon" height={40} width={40} /> }
-                {player.place >= 4 && <Image src={getTrophy(player.place)} alt="Trophy Icon" height={35} width={35} style={{ marginBottom: 5 }} /> }
+                {player.place >= 4 && <Image src={getTrophy(player.place)} alt="Trophy Icon" height={35} width={35} /> }
                 <Grid container item xs style={{ marginLeft: 10 }} alignItems="center" justifyContent="space-between">
                   <Grid item xs style={{ textAlign: "left" }}>
                     <Typography variant="h6" style={{ fontWeight: "bold" }}>
