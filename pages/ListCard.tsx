@@ -7,6 +7,13 @@ import Tooltip from "@mui/material/Tooltip";
 const ListCard = ({ player }: any) => {
   if (!player) return null;
 
+  let baseUrl = "twitch.tv";
+  if (player.platform === "facebook") {
+    baseUrl = "facebook.com";
+  }
+
+  const streamUrl = `https://${baseUrl}/${player.channelName}`;
+
   return (
     <Paper
       key={player.summonerId}
@@ -24,7 +31,7 @@ const ListCard = ({ player }: any) => {
           {player.place}.
         </Typography>
         {player.profilePic && (
-          <Tooltip title={`Go to https://twitch.tv/${player.channelName}`}>
+          <Tooltip title={`Go to ${streamUrl}`}>
             <Grid style={{ padding: 0, margin: 0, maxHeight: 40 }}>
               <Image
                 src={player.profilePic}
@@ -32,12 +39,7 @@ const ListCard = ({ player }: any) => {
                 height={40}
                 width={40}
                 className="profile-pic"
-                onClick={() =>
-                  window.open(
-                    `https://twitch.tv/${player.channelName}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => window.open(streamUrl, "_blank")}
               />
             </Grid>
           </Tooltip>

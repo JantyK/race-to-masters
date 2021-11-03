@@ -24,6 +24,13 @@ const Card = ({ player }: any) => {
     crown = "/bronze-crown.svg";
   }
 
+  let baseUrl = "twitch.tv";
+  if (player.platform === "facebook") {
+    baseUrl = "facebook.com";
+  }
+
+  const streamUrl = `https://${baseUrl}/${player.channelName}`;
+
   return (
     <Grid item style={{ marginTop: player.place > 1 ? 20 : 0 }}>
       <Image src={crown} alt="Crown" width={60} height={60} />
@@ -35,7 +42,7 @@ const Card = ({ player }: any) => {
         }}
       >
         {player.profilePic && (
-          <Tooltip title={`Go to https://twitch.tv/${player.channelName}`}>
+          <Tooltip title={`Go to ${streamUrl}`}>
             <Grid>
               <Image
                 src={player.profilePic}
@@ -43,12 +50,7 @@ const Card = ({ player }: any) => {
                 height={50}
                 width={50}
                 className="profile-pic"
-                onClick={() =>
-                  window.open(
-                    `https://twitch.tv/${player.channelName}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => window.open(streamUrl, "_blank")}
               />
             </Grid>
           </Tooltip>
