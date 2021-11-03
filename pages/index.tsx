@@ -8,7 +8,8 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
 import environment from '../utilities/environment'
-import { getSummonerByName, getSummonerLeagueEntryBySummonerId, LeagueEntry } from '../utilities/riot'
+import { getSummonerByName, getSummonerLeagueEntryBySummonerId, LeagueEntry, sortLeagueEntriesByRank } from '../utilities/riot'
+
 
 export async function getStaticProps() {
   const p1 = environment.leaderboardEntries.map((entry) => {
@@ -21,10 +22,10 @@ export async function getStaticProps() {
     return getSummonerLeagueEntryBySummonerId(summoner.id)
   })
 
-  const leagueEntries = await Promise.all(p2)
+  let leagueEntries = await Promise.all(p2)
+  leagueEntries = sortLeagueEntriesByRank(leagueEntries)
 
-  // TODO: Sort the league entries.
-
+  // TODO: Add twitch usernames to response.
   return {
     props: {
       leagueEntries: leagueEntries.map((entry, i) => {
