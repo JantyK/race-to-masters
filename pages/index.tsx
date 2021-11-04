@@ -25,7 +25,7 @@ const shouldRefresh = async () => {
   return lastRefreshTime.getTime() + MILLISECONDS_IN_MINUTE < now.getTime()
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const refresh = await shouldRefresh()
   
   let leagueEntries: any[] = []
