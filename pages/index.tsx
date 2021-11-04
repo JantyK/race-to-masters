@@ -55,6 +55,7 @@ interface Props {
   })[];
 }
 
+
 const Home: NextPage<Props> = ({ leagueEntries }) => {
   const [players] = useState(leagueEntries || []);
 
