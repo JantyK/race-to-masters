@@ -14,7 +14,7 @@ import {
   sortLeagueEntriesByRank,
 } from "../utilities/riot";
 import Card from "./Card";
-import ListCard from "./ListCard";
+import ListCard from "../components/ListCard";
 import ListCardMobile from "./ListCardMobile";
 
 export async function getStaticProps() {
@@ -31,7 +31,6 @@ export async function getStaticProps() {
   let leagueEntries = await Promise.all(p2);
   leagueEntries = sortLeagueEntriesByRank(leagueEntries);
 
-  // TODO: Add twitch usernames to response.
   return {
     props: {
       leagueEntries: leagueEntries.map((entry, i) => {
