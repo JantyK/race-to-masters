@@ -6,7 +6,6 @@ import Image from "next/image";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
-import environment from "../utilities/environment";
 import {
   getSummonerByName,
   getSummonerLeagueEntryBySummonerId,
@@ -16,35 +15,68 @@ import {
 import Card from "../components/Card";
 import ListCard from "../components/ListCard";
 import ListCardMobile from "../components/ListCardMobile";
+import { getLastRefreshTime, getLeaderboardEntries, updateLastLeagueEntryForLeaderboardEntry, updateLastRefreshTimeToNow, updateSummonerIdForLeaderboardEntry } from "../utilities/firebase-admin";
+
+const shouldRefresh = async () => {
+  const lastRefreshTime = await getLastRefreshTime()
+  const now = new Date()
+
+  const MILLISECONDS_IN_MINUTE = 60000
+  return lastRefreshTime.getTime() + MILLISECONDS_IN_MINUTE < now.getTime()
+}
 
 export async function getStaticProps() {
-  const p1 = environment.leaderboardEntries.map((entry) => {
-    return getSummonerByName(entry.summonerName);
+  const refresh = await shouldRefresh()
+  
+  let leagueEntries: any[] = []
+  const leaderboardEntries = await getLeaderboardEntries()
+
+  const p1: Promise<{ documentId: string, summonerId: string }>[] = leaderboardEntries.map((entry) => {
+    if (entry.summonerId) {
+      return Promise.resolve({ documentId: entry.id, summonerId: entry.summonerId })
+    }
+
+    return new Promise(async (resolve) => {
+      console.log(`Don't have ${entry.summonerName}'s summonerId. Fetching it...'`)
+      const summoner = await getSummonerByName(entry.summonerName)
+      await updateSummonerIdForLeaderboardEntry(entry.id, summoner.id)
+      entry.summonerId = summoner.id
+      resolve({ documentId: entry.id, summonerId: summoner.id})
+    })
   });
 
-  const summoners = await Promise.all(p1);
+  const summoners = await Promise.all(p1)
 
-  const p2 = summoners.map((summoner) => {
-    return getSummonerLeagueEntryBySummonerId(summoner.id, summoner.name);
-  });
+  if (refresh) {
+    console.log("It's been past a minute. Time to refresh...")
+    const p2: Promise<LeagueEntry>[] = summoners.map((summoner) => {
+      return new Promise(async (resolve) => {
+        const leagueEntry = await getSummonerLeagueEntryBySummonerId(summoner.summonerId)
+        await updateLastLeagueEntryForLeaderboardEntry(summoner.documentId, leagueEntry)
+        resolve({ ...leagueEntry, summonerId: summoner.summonerId })
+      })
+    })
+  
+    leagueEntries = await Promise.all(p2)
+    await updateLastRefreshTimeToNow()
+  } else {
+    leagueEntries = leaderboardEntries.map((entry) => ({ ...entry.lastLeagueEntry, summonerId: entry.summonerId }))
+  }
 
-  let leagueEntries = await Promise.all(p2);
-  leagueEntries = sortLeagueEntriesByRank(leagueEntries);
-
+  leagueEntries = sortLeagueEntriesByRank(leagueEntries)
   return {
     props: {
       leagueEntries: leagueEntries.map((entry, i) => {
         return {
           ...entry,
           place: i + 1,
-          ...environment.leaderboardEntries.find(
-            (e) => e?.summonerName === entry?.summonerName
+          ...leaderboardEntries.find(
+            (e) => e?.summonerId === entry?.summonerId
           ),
-        };
+        }
       }),
-    },
-    revalidate: 60,
-  };
+    }
+  };    
 }
 
 interface Props {

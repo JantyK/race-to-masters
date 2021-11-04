@@ -1,33 +1,22 @@
-interface LeaderboardEntry {
-  channelName: string;
-  summonerName: string;
-  platform: "facebook" | "twitch";
-  profilePic?: string;
-}
-
 const getValue = (key: string): string => {
   const value = process.env[key];
-  if (!value)
+  
+  if (!value) {
     throw new Error(
       `Environment variable ${key} is not defined. Did you setup your environment variables correctly?`
     );
+  }
+
   return value;
 };
 
-const leaderboardEntriesString = getValue("LEADERBOARD_ENTRIES");
-let leaderboardEntries: LeaderboardEntry[] = [];
-
-try {
-  leaderboardEntries = JSON.parse(
-    leaderboardEntriesString
-  ) as LeaderboardEntry[];
-} catch (error) {
-  console.error(error);
-}
-
 const environment = {
   riotToken: getValue("RIOT_TOKEN"),
-  leaderboardEntries,
+  firebase: {
+    clientEmail: getValue("FIREBASE_CLIENT_EMAIL"),
+    privateKey: getValue("FIREBASE_PRIVATE_KEY").replace(/\\n/g, '\n'),
+    projectId: getValue("FIREBASE_PROJECT_ID"),
+  }
 };
 
 export default environment;

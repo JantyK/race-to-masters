@@ -28,7 +28,8 @@ export interface LeagueEntry {
   inactive: boolean;
 }
 
-const RIOT_ORIGIN = "https://na1.api.riotgames.com";
+// const RIOT_ORIGIN = "https://na1.api.riotgames.com";
+const RIOT_ORIGIN = "https://na1.api.riotgames.com"
 
 export const getSummonerByName = async (name: string): Promise<Summoner> => {
   console.log(`Attempting to fetch summoner data for summer ${name}.`);
@@ -49,8 +50,7 @@ export const getSummonerByName = async (name: string): Promise<Summoner> => {
 };
 
 export const getSummonerLeagueEntryBySummonerId = async (
-  summonerId: string,
-  summonerName: string
+  summonerId: string
 ): Promise<LeagueEntry> => {
   console.log(`Attempting to fetch league entry for summoner ${summonerId}.`);
   const response = await fetch(
@@ -62,7 +62,7 @@ export const getSummonerLeagueEntryBySummonerId = async (
 
   if (response.status === 200) {
     const entries = ((await response.json()) as unknown) as LeagueEntry[];
-    return { ...entries[0], summonerName };
+    return { ...entries[0] };
   }
 
   throw new Error(

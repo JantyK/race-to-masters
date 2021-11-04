@@ -101,10 +101,10 @@ const ListCardMobile = ({ player }: any) => {
             alignItems="center"
           >
             <Typography className="text">
-              {player.tier ? `${player.tier} ${player.rank}` : "N/A"}
+              {player.tier !== undefined ? `${player.tier} ${player.rank}` : "N/A"}
             </Typography>
             <Typography className="text">
-              {player.leaguePoints ? `${player.leaguePoints} LP` : "N/A"}
+              {player.leaguePoints !== undefined ? `${player.leaguePoints} LP` : "N/A"}
             </Typography>
           </Grid>
         </Grid>
