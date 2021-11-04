@@ -13,9 +13,9 @@ import {
   LeagueEntry,
   sortLeagueEntriesByRank,
 } from "../utilities/riot";
-import Card from "./Card";
+import Card from "../components/Card";
 import ListCard from "../components/ListCard";
-import ListCardMobile from "./ListCardMobile";
+import ListCardMobile from "../components/ListCardMobile";
 
 export async function getStaticProps() {
   const p1 = environment.leaderboardEntries.map((entry) => {
