@@ -15,55 +15,77 @@ import {
 import Card from "../components/Card";
 import ListCard from "../components/ListCard";
 import ListCardMobile from "../components/ListCardMobile";
-import { getLastRefreshTime, getLeaderboardEntries, updateLastLeagueEntryForLeaderboardEntry, updateLastRefreshTimeToNow, updateSummonerIdForLeaderboardEntry } from "../utilities/firebase-admin";
+import {
+  getLastRefreshTime,
+  getLeaderboardEntries,
+  updateLastLeagueEntryForLeaderboardEntry,
+  updateLastRefreshTimeToNow,
+  updateSummonerIdForLeaderboardEntry,
+} from "../utilities/firebase-admin";
 
 const shouldRefresh = async () => {
-  const lastRefreshTime = await getLastRefreshTime()
-  const now = new Date()
+  const lastRefreshTime = await getLastRefreshTime();
+  const now = new Date();
 
-  const MILLISECONDS_IN_MINUTE = 60000
-  return lastRefreshTime.getTime() + MILLISECONDS_IN_MINUTE < now.getTime()
-}
+  const MILLISECONDS_IN_MINUTE = 60000;
+  return lastRefreshTime.getTime() + MILLISECONDS_IN_MINUTE < now.getTime();
+};
 
 export async function getServerSideProps() {
-  const refresh = await shouldRefresh()
-  
-  let leagueEntries: any[] = []
-  const leaderboardEntries = await getLeaderboardEntries()
+  const refresh = await shouldRefresh();
 
-  const p1: Promise<{ documentId: string, summonerId: string }>[] = leaderboardEntries.map((entry) => {
+  let leagueEntries: any[] = [];
+  const leaderboardEntries = await getLeaderboardEntries();
+
+  const p1: Promise<{
+    documentId: string;
+    summonerId: string;
+  }>[] = leaderboardEntries.map((entry) => {
     if (entry.summonerId) {
-      return Promise.resolve({ documentId: entry.id, summonerId: entry.summonerId })
+      return Promise.resolve({
+        documentId: entry.id,
+        summonerId: entry.summonerId,
+      });
     }
 
     return new Promise(async (resolve) => {
-      console.log(`Don't have ${entry.summonerName}'s summonerId. Fetching it...'`)
-      const summoner = await getSummonerByName(entry.summonerName)
-      await updateSummonerIdForLeaderboardEntry(entry.id, summoner.id)
-      entry.summonerId = summoner.id
-      resolve({ documentId: entry.id, summonerId: summoner.id})
-    })
+      console.log(
+        `Don't have ${entry.summonerName}'s summonerId. Fetching it...'`
+      );
+      const summoner = await getSummonerByName(entry.summonerName);
+      await updateSummonerIdForLeaderboardEntry(entry.id, summoner.id);
+      entry.summonerId = summoner.id;
+      resolve({ documentId: entry.id, summonerId: summoner.id });
+    });
   });
 
-  const summoners = await Promise.all(p1)
+  const summoners = await Promise.all(p1);
 
   if (refresh) {
-    console.log("It's been past a minute. Time to refresh...")
+    console.log("It's been past a minute. Time to refresh...");
     const p2: Promise<LeagueEntry>[] = summoners.map((summoner) => {
       return new Promise(async (resolve) => {
-        const leagueEntry = await getSummonerLeagueEntryBySummonerId(summoner.summonerId)
-        await updateLastLeagueEntryForLeaderboardEntry(summoner.documentId, leagueEntry)
-        resolve({ ...leagueEntry, summonerId: summoner.summonerId })
-      })
-    })
-  
-    leagueEntries = await Promise.all(p2)
-    await updateLastRefreshTimeToNow()
+        const leagueEntry = await getSummonerLeagueEntryBySummonerId(
+          summoner.summonerId
+        );
+        await updateLastLeagueEntryForLeaderboardEntry(
+          summoner.documentId,
+          leagueEntry
+        );
+        resolve({ ...leagueEntry, summonerId: summoner.summonerId });
+      });
+    });
+
+    leagueEntries = await Promise.all(p2);
+    await updateLastRefreshTimeToNow();
   } else {
-    leagueEntries = leaderboardEntries.map((entry) => ({ ...entry.lastLeagueEntry, summonerId: entry.summonerId }))
+    leagueEntries = leaderboardEntries.map((entry) => ({
+      ...entry.lastLeagueEntry,
+      summonerId: entry.summonerId,
+    }));
   }
 
-  leagueEntries = sortLeagueEntriesByRank(leagueEntries)
+  leagueEntries = sortLeagueEntriesByRank(leagueEntries);
   return {
     props: {
       leagueEntries: leagueEntries.map((entry, i) => {
@@ -73,10 +95,10 @@ export async function getServerSideProps() {
           ...leaderboardEntries.find(
             (e) => e?.summonerId === entry?.summonerId
           ),
-        }
+        };
       }),
-    }
-  };    
+    },
+  };
 }
 
 interface Props {
@@ -86,7 +108,6 @@ interface Props {
     channelName: string;
   })[];
 }
-
 
 const Home: NextPage<Props> = ({ leagueEntries }) => {
   const [players] = useState(leagueEntries || []);
@@ -123,20 +144,13 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
           </Grid>
         )}
 
-        <Grid
-          container
-          style={{ overflow: "auto", padding: 10 }}
-          direction="column"
-          alignItems="center"
-        >
+        <div style={{ overflow: "auto", padding: 10 }}>
           {players.map((player) =>
             player.place <= 3 ? null : (
-              <Grid item xs={3} key={player.place}>
-                <ListCard player={player} />
-              </Grid>
+              <ListCard player={player} key={player.place} />
             )
           )}
-        </Grid>
+        </div>
       </header>
       <header className="App-header-mobile">
         <Grid
