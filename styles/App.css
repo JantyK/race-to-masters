@@ -42,12 +42,27 @@ body {
 }
 
 .text {
-  font-weight: bold;
+  font-weight: bold !important;
   opacity: 0.75;
 }
 
 .App-header-mobile {
   display: none;
+}
+
+.stats-mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 520px) {
+  .stats {
+    display: none;
+  }
+
+  .stats-mobile {
+    display: block;
+    text-align: left;
+  }
 }
 
 @media only screen and (max-width: 800px) {

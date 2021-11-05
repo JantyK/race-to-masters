@@ -65,12 +65,22 @@ const ListCard = ({ player }: any) => {
           </Grid>
           <Grid item xs style={{ textAlign: "center" }}>
             <Typography className="text">
-              {player.leaguePoints !== undefined ? `${player.leaguePoints} LP` : "N/A"}
+              {player.leaguePoints !== undefined
+                ? `${player.leaguePoints} LP`
+                : "N/A"}
             </Typography>
           </Grid>
           <Grid item xs style={{ textAlign: "center" }}>
             <Typography className="text">
-              {player.wins !== undefined ? `${player.wins} Wins` : "N/A"}
+              {player.wins !== undefined ? (
+                <>
+                  {player.wins + player.losses} Games
+                  <br />
+                  {player.wins} Win(s)
+                </>
+              ) : (
+                "N/A"
+              )}
             </Typography>
           </Grid>
         </Grid>

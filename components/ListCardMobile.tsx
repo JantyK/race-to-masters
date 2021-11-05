@@ -72,12 +72,32 @@ const ListCardMobile = ({ player }: any) => {
             </Tooltip>
           )}
         </Grid>
+        <Grid container item xs direction="column" className="stats-mobile">
+          <Typography variant="h6" className="text">
+            {player.summonerName || "N/A"}
+          </Typography>
+          <Typography className="text">
+            {player.wins !== undefined ? (
+              <>
+                {player.wins + player.losses} Games ({player.wins} Wins)
+              </>
+            ) : (
+              "N/A"
+            )}
+          </Typography>
+          <Typography className="text">
+            {player.tier !== undefined
+              ? `${player.tier} ${player.rank} ${player.leaguePoints} LP`
+              : "N/A"}
+          </Typography>
+        </Grid>
         <Grid
           container
           item
           xs
           alignItems="center"
           justifyContent="space-between"
+          className="stats"
         >
           <Grid
             container
@@ -90,7 +110,13 @@ const ListCardMobile = ({ player }: any) => {
               {player.summonerName || "N/A"}
             </Typography>
             <Typography className="text">
-              {player.wins ? `${player.wins} W` : "N/A"}
+              {player.wins !== undefined ? (
+                <>
+                  {player.wins + player.losses} Games ({player.wins} Wins)
+                </>
+              ) : (
+                "N/A"
+              )}
             </Typography>
           </Grid>
           <Grid
@@ -101,16 +127,18 @@ const ListCardMobile = ({ player }: any) => {
             alignItems="center"
           >
             <Typography className="text">
-              {player.tier !== undefined ? `${player.tier} ${player.rank}` : "N/A"}
+              {player.tier !== undefined
+                ? `${player.tier} ${player.rank}`
+                : "N/A"}
             </Typography>
             <Typography className="text">
-              {player.leaguePoints !== undefined ? `${player.leaguePoints} LP` : "N/A"}
+              {player.leaguePoints !== undefined
+                ? `${player.leaguePoints} LP`
+                : "N/A"}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-
-      <Grid container></Grid>
     </Paper>
   );
 };
