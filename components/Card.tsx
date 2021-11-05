@@ -82,13 +82,23 @@ const Card = ({ player }: any) => {
             <Typography className="text">LP:</Typography>
 
             <Typography className="text">
-              {player.leaguePoints !== undefined ? `${player.leaguePoints} LP` : "N/A"}
+              {player.leaguePoints !== undefined
+                ? `${player.leaguePoints} LP`
+                : "N/A"}
+            </Typography>
+          </Grid>
+          <Grid container justifyContent="space-between">
+            <Typography className="text">Games:</Typography>
+            <Typography className="text">
+              {player.wins !== undefined
+                ? `${player.wins + player.losses} Games`
+                : "N/A"}
             </Typography>
           </Grid>
           <Grid container justifyContent="space-between">
             <Typography className="text">Wins:</Typography>
             <Typography className="text">
-              {player.wins !== undefined ? `${player.wins} Wins` : "N/A"}
+              {player.wins !== undefined ? `${player.wins} Win(s)` : "N/A"}
             </Typography>
           </Grid>
         </Grid>
