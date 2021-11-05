@@ -145,12 +145,14 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
         )}
 
         <div
-          style={{ overflow: "auto", padding: 10 }}
+          style={{ overflow: "auto", padding: 10, width: "100%" }}
           className="hide-scrollbar"
         >
           {players.map((player) =>
             player.place <= 3 ? null : (
-              <ListCard player={player} key={player.place} />
+              <Grid item container justifyContent="center">
+                <ListCard player={player} key={player.place} />
+              </Grid>
             )
           )}
         </div>
