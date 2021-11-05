@@ -72,32 +72,12 @@ const ListCardMobile = ({ player }: any) => {
             </Tooltip>
           )}
         </Grid>
-        <Grid container item xs direction="column" className="stats-mobile">
-          <Typography variant="h6" className="text">
-            {player.summonerName || "N/A"}
-          </Typography>
-          <Typography className="text">
-            {player.wins !== undefined ? (
-              <>
-                {player.wins + player.losses} Games ({player.wins} Wins)
-              </>
-            ) : (
-              "N/A"
-            )}
-          </Typography>
-          <Typography className="text">
-            {player.tier !== undefined
-              ? `${player.tier} ${player.rank} ${player.leaguePoints} LP`
-              : "N/A"}
-          </Typography>
-        </Grid>
         <Grid
           container
           item
           xs
           alignItems="center"
           justifyContent="space-between"
-          className="stats"
         >
           <Grid
             container
