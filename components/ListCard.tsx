@@ -8,8 +8,8 @@ const ListCard = ({ player }: any) => {
   if (!player) return null;
 
   let baseUrl = "twitch.tv";
-  if (player.platform === "facebook") {
-    baseUrl = "facebook.com";
+  if (player.platform !== "twitch") {
+    baseUrl = `${player.platform}.com`;
   }
 
   const streamUrl = `https://${baseUrl}/${player.channelName}`;
