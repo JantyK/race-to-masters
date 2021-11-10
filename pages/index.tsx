@@ -35,7 +35,27 @@ export async function getServerSideProps() {
   const refresh = await shouldRefresh();
 
   let leagueEntries: any[] = [];
-  const leaderboardEntries = await getLeaderboardEntries();
+  const allLeaderboardEntries = await getLeaderboardEntries();
+
+  const groupB: any[] = [];
+  const groupA = allLeaderboardEntries.filter((entry) => {
+    if (entry.group === "b") {
+      groupB.push(entry);
+    } else {
+      return entry;
+    }
+  });
+
+  const minutes = new Date().getMinutes();
+  const leaderboardEntries = minutes % 2 === 0 ? groupA : groupB;
+  const other = minutes % 2 !== 0 ? groupA : groupB;
+
+  const otherLeaderboardEntries = other.map((entry) => ({
+    ...entry.lastLeagueEntry,
+    summonerId: entry.summonerId,
+    summonerName: entry.summonerName,
+    profilePic: entry.profilePic,
+  }));
 
   const p1: Promise<{
     documentId: string;
@@ -52,10 +72,14 @@ export async function getServerSideProps() {
       console.log(
         `Don't have ${entry.summonerName}'s summonerId. Fetching it...'`
       );
-      const summoner = await getSummonerByName(entry.summonerName);
-      await updateSummonerIdForLeaderboardEntry(entry.id, summoner.id);
-      entry.summonerId = summoner.id;
-      resolve({ documentId: entry.id, summonerId: summoner.id });
+      try {
+        const summoner = await getSummonerByName(entry.summonerName);
+        await updateSummonerIdForLeaderboardEntry(entry.id, summoner.id);
+        entry.summonerId = summoner.id;
+        resolve({ documentId: entry.id, summonerId: summoner.id });
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 
@@ -77,15 +101,18 @@ export async function getServerSideProps() {
     });
 
     leagueEntries = await Promise.all(p2);
+    leagueEntries = [...leagueEntries, ...otherLeaderboardEntries];
     await updateLastRefreshTimeToNow();
   } else {
-    leagueEntries = leaderboardEntries.map((entry) => ({
+    leagueEntries = [...groupA, ...groupB].map((entry) => ({
       ...entry.lastLeagueEntry,
       summonerId: entry.summonerId,
+      profilePic: entry.profilePic,
     }));
   }
 
   leagueEntries = sortLeagueEntriesByRank(leagueEntries);
+
   return {
     props: {
       leagueEntries: leagueEntries.map((entry, i) => {

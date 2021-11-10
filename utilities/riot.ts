@@ -29,7 +29,7 @@ export interface LeagueEntry {
 }
 
 // const RIOT_ORIGIN = "https://na1.api.riotgames.com";
-const RIOT_ORIGIN = "https://na1.api.riotgames.com"
+const RIOT_ORIGIN = "https://na1.api.riotgames.com";
 
 export const getSummonerByName = async (name: string): Promise<Summoner> => {
   console.log(`Attempting to fetch summoner data for summer ${name}.`);
