@@ -53,8 +53,9 @@ export async function getServerSideProps() {
   const otherLeaderboardEntries = other.map((entry) => ({
     ...entry.lastLeagueEntry,
     summonerId: entry.summonerId,
-    summonerName: entry.summonerName,
     profilePic: entry.profilePic,
+    platform: entry.platform,
+    channelName: entry.channelName,
   }));
 
   const p1: Promise<{
@@ -108,6 +109,8 @@ export async function getServerSideProps() {
       ...entry.lastLeagueEntry,
       summonerId: entry.summonerId,
       profilePic: entry.profilePic,
+      platform: entry.platform,
+      channelName: entry.channelName,
     }));
   }
 
