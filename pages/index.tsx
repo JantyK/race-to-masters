@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import React, { useState } from "react";
 
 import Image from "next/image";
+import Head from "next/head";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
@@ -144,6 +145,9 @@ const Home: NextPage<Props> = ({ leagueEntries }) => {
 
   return (
     <div className="App">
+      <Head>
+        <title>Race to Masters</title>
+      </Head>
       <header className="App-header-desktop">
         <Grid container justifyContent="center" alignItems="center">
           <Image
